@@ -4,6 +4,8 @@ import MovieComponent from "../components/MovieComponent.jsx"; // FAZER A CHAMAD
 const movieURL = import.meta.env.VITE_API;
 const apiKey = import.meta.env.VITE_API_KEY;
 
+import './styles/movieGrid.css';
+
 const Home = () => {
     const [topMovies, setTopMovies] = useState([]);
 
