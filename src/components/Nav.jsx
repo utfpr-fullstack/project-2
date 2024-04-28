@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom';
 import CameraIndoorIcon from '@mui/icons-material/CameraIndoor';
 import SearchIcon from '@mui/icons-material/Search';
+
+import './styles/nav.css';
 const Nav = () => {
     return (
         <nav id="navbar">

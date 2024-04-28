@@ -1,0 +1,39 @@
+#navbar {
+    background-color: #EADBC8;
+    color: white;
+    text-align: center;
+    display: flex;
+    justify-content: space-between;
+    padding: 1em;
+}
+
+#navbar h2 a{
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.2em;
+}
+
+#navbar form {
+    display: flex;
+}
+
+#navbar input {
+    padding: 0.5em;
+    margin: 0.5em;
+    border-radius: 5px;
+    border: none;
+}
+
+#navbar button {
+    padding: 0.5em;
+    margin: 0.5em;
+    border-radius: 5px;
+    border: none;
+    background-color: #102C57;
+    color: white;
+}
+
+#navbar button:hover {
+    background-color: #1A75BB;
+}
