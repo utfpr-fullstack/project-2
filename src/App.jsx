@@ -7,10 +7,9 @@ function App() {
     <>
       <div className="App">
          <Nav />
-        <h2>oi</h2>
           <Outlet />
       </div>
     </>
-  )
+  );
 }
 export default App

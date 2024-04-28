@@ -1,0 +1,19 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+}
+
+body {
+    background-color: #FEFAF6;
+}
+
+a {
+    text-decoration: none;
+    color: #102C57;
+}
+
+a:hover {
+    color: #448c92;
+}
