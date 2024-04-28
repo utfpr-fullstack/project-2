@@ -1,1 +1,1 @@
-# Projecto 2 - Disciplina Fullstack UTFPR
+# Projeto 2 - Disciplina Fullstack UTFPR
