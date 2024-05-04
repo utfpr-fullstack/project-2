@@ -15,11 +15,25 @@ const apiKey = import.meta.env.VITE_API_KEY;
 const Movie = () => {
     const {id} = useParams();
     const [movie, setMovie] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
 
     const getMovie = async (url) => {
-        const response = await fetch(url);
-        const data = await response.json();
-        setMovie(data);
+        setLoading(true);
+        setError(null);
+
+        try {
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error('Failed to fetch movie details');
+            }
+            const data = await response.json();
+            setMovie(data);
+        } catch (error) {
+            setError('Failed to fetch movie details. Please try again later.');
+        } finally {
+            setLoading(false);
+        }
     }
 
     const formatCurrency = (number) => {
@@ -32,11 +46,12 @@ const Movie = () => {
     useEffect(() => {
         const movieUrl = `${movieURL}${id}?${apiKey}`;
         getMovie(movieUrl)
-    }, []);
-
+    }, [id]);
 
     return (
         <div className="movie__page">
+            {loading && <p>Loading...</p>}
+            {error && <p>{error}</p>}
             {movie && (
                 <>
                     <MovieComponent movie={movie} showLink={false} />
@@ -64,4 +79,5 @@ const Movie = () => {
         </div>
     );
 };
+
 export default Movie;
