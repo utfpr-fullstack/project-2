@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import useMovieSearch from '../hooks/useMovieSearch'; // Importando o hook
 
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import WalletIcon from '@mui/icons-material/Wallet';
@@ -13,21 +14,24 @@ const movieURL = import.meta.env.VITE_API;
 const apiKey = import.meta.env.VITE_API_KEY;
 
 const Movie = () => {
-    const {id} = useParams();
-    const [movie, setMovie] = useState(null);
+    const { id } = useParams();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    const getMovie = async (url) => {
+    
+    const { movies: movieDetails } = useMovieSearch(movieURL, apiKey);
+
+    const getMovieDetails = async () => {
         setLoading(true);
         setError(null);
 
         try {
-            const response = await fetch(url);
+            const response = await fetch(`${movieURL}${id}?${apiKey}`);
             if (!response.ok) {
                 throw new Error('Failed to fetch movie details');
             }
             const data = await response.json();
+            
             setMovie(data);
         } catch (error) {
             setError('Failed to fetch movie details. Please try again later.');
@@ -36,43 +40,35 @@ const Movie = () => {
         }
     }
 
-    const formatCurrency = (number) => {
-        return number.toLocaleString("en-US", {
-            style: "currency",
-            currency: "USD",
-        });
-    };
-
     useEffect(() => {
-        const movieUrl = `${movieURL}${id}?${apiKey}`;
-        getMovie(movieUrl)
+        getMovieDetails();
     }, [id]);
 
     return (
         <div className="movie__page">
             {loading && <p>Loading...</p>}
             {error && <p>{error}</p>}
-            {movie && (
+            {movieDetails && (
                 <>
-                    <MovieComponent movie={movie} showLink={false} />
-                    <p className="movie__resume">{movie.tagline}</p>
+                    <MovieComponent movie={movieDetails} showLink={false} />
+                    <p className="movie__resume">{movieDetails.tagline}</p>
                     <div className="movie__info">
                         <h3>
                             <WalletIcon/> Budget:
                         </h3>
-                        <p>{formatCurrency(movie.budget)}</p>
+                        <p>{formatCurrency(movieDetails.budget)}</p>
                         <h3>
                             <AttachMoneyIcon/> Revenue:
                         </h3>
-                        <p>{formatCurrency(movie.revenue)}</p>
+                        <p>{formatCurrency(movieDetails.revenue)}</p>
                         <h3>
                             <AccessTimeIcon/> Runtime:
                         </h3>
-                        <p>{movie.runtime} minutos</p>
+                        <p>{movieDetails.runtime} minutos</p>
                         <h3>
                             <DescriptionIcon/> Overview:
                         </h3>
-                        <p>{movie.overview}</p>
+                        <p>{movieDetails.overview}</p>
                     </div>
                 </>
             )}
