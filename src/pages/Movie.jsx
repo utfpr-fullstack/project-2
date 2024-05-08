@@ -1,38 +1,40 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import useMovieSearch from '../hooks/useMovieSearch'; // Importando o hook
+import useMovieSearch from '../hooks/useMovieSearch'; 
 
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import WalletIcon from '@mui/icons-material/Wallet';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import DescriptionIcon from '@mui/icons-material/Description';
 
-import MovieComponent from "../components/MovieComponent";
-import './styles/movieDetails.css'
-
-const movieURL = import.meta.env.VITE_API;
-const apiKey = import.meta.env.VITE_API_KEY;
+import './styles/movieDetails.css';
 
 const Movie = () => {
     const { id } = useParams();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-
-    
-    const { movies: movieDetails } = useMovieSearch(movieURL, apiKey);
+    const { movies: movieDetails } = useMovieSearch(); 
 
     const getMovieDetails = async () => {
         setLoading(true);
         setError(null);
 
         try {
-            const response = await fetch(`${movieURL}${id}?${apiKey}`);
-            if (!response.ok) {
-                throw new Error('Failed to fetch movie details');
-            }
-            const data = await response.json();
-            
-            setMovie(data);
+            // Simulação de uma busca assíncrona
+            await new Promise(resolve => setTimeout(resolve, 1000));
+
+            // Definindo detalhes do filme
+            const movieDetail = {
+                id: id,
+                title: `Movie ${id}`,
+                overview: `Overview for Movie ${id}`,
+                tagline: `Tagline for Movie ${id}`,
+                budget: 1000000,
+                revenue: 2000000,
+                runtime: 120,
+            };
+
+            setMovieDetails(movieDetail);
         } catch (error) {
             setError('Failed to fetch movie details. Please try again later.');
         } finally {
@@ -64,7 +66,7 @@ const Movie = () => {
                         <h3>
                             <AccessTimeIcon/> Runtime:
                         </h3>
-                        <p>{movieDetails.runtime} minutos</p>
+                        <p>{movieDetails.runtime} minutes</p>
                         <h3>
                             <DescriptionIcon/> Overview:
                         </h3>
