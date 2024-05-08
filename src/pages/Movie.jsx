@@ -1,76 +1,44 @@
-import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import useMovieSearch from '../hooks/useMovieSearch'; 
-
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
-import WalletIcon from '@mui/icons-material/Wallet';
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import DescriptionIcon from '@mui/icons-material/Description';
-
+import React, { useState, useEffect } from 'react';
+import { useParams } from "react-router-dom";
+import MovieComponent from "../components/MovieComponent";
 import './styles/movieDetails.css';
 
 const Movie = () => {
     const { id } = useParams();
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
-    const { movies: movieDetails } = useMovieSearch(); 
-
-    const getMovieDetails = async () => {
-        setLoading(true);
-        setError(null);
-
-        try {
-            // Simulação de uma busca assíncrona
-            await new Promise(resolve => setTimeout(resolve, 1000));
-
-            // Definindo detalhes do filme
-            const movieDetail = {
-                id: id,
-                title: `Movie ${id}`,
-                overview: `Overview for Movie ${id}`,
-                tagline: `Tagline for Movie ${id}`,
-                budget: 1000000,
-                revenue: 2000000,
-                runtime: 120,
-            };
-
-            setMovieDetails(movieDetail);
-        } catch (error) {
-            setError('Failed to fetch movie details. Please try again later.');
-        } finally {
-            setLoading(false);
-        }
-    }
+    const [movie, setMovie] = useState(null);
 
     useEffect(() => {
-        getMovieDetails();
+        const fetchMovie = async () => {
+            try {
+                const response = await fetch(`${import.meta.env.VITE_API}movie/${id}?api_key=${import.meta.env.VITE_API_KEY}`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch movie details');
+                }
+                const data = await response.json();
+                setMovie(data);
+            } catch (error) {
+                console.error('Error fetching movie details:', error);
+            }
+        };
+
+        fetchMovie();
     }, [id]);
 
     return (
         <div className="movie__page">
-            {loading && <p>Loading...</p>}
-            {error && <p>{error}</p>}
-            {movieDetails && (
+            {movie && (
                 <>
-                    <MovieComponent movie={movieDetails} showLink={false} />
-                    <p className="movie__resume">{movieDetails.tagline}</p>
+                    <MovieComponent movie={movie} showLink={false} />
+                    <p className="movie__resume">{movie.tagline}</p>
                     <div className="movie__info">
-                        <h3>
-                            <WalletIcon/> Budget:
-                        </h3>
-                        <p>{formatCurrency(movieDetails.budget)}</p>
-                        <h3>
-                            <AttachMoneyIcon/> Revenue:
-                        </h3>
-                        <p>{formatCurrency(movieDetails.revenue)}</p>
-                        <h3>
-                            <AccessTimeIcon/> Runtime:
-                        </h3>
-                        <p>{movieDetails.runtime} minutes</p>
-                        <h3>
-                            <DescriptionIcon/> Overview:
-                        </h3>
-                        <p>{movieDetails.overview}</p>
+                        <h3>Budget:</h3>
+                        <p>{movie.budget}</p>
+                        <h3>Revenue:</h3>
+                        <p>{movie.revenue}</p>
+                        <h3>Runtime:</h3>
+                        <p>{movie.runtime} minutes</p>
+                        <h3>Overview:</h3>
+                        <p>{movie.overview}</p>
                     </div>
                 </>
             )}
