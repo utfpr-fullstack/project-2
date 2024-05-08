@@ -24,3 +24,5 @@ vite.config.js
 *.njsproj
 *.sln
 *.sw?
+
+.vercel
