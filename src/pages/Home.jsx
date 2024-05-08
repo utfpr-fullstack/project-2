@@ -5,13 +5,12 @@ import useMovieSearch from '../hooks/useMovieSearch';
 import './styles/movieGrid.css';
 
 const Home = () => {
-    const { movies, loading, error, searchMovies } = useMovieSearch(searchURL, apiKey); 
+    const { movies, loading, error, searchMovies } = useMovieSearch(); 
 
     const [loadedMovies, setLoadedMovies] = useState([]);
     const [limit, setLimit] = useState(10);
 
     useEffect(() => {
-
         searchMovies('top_rated');
     }, []);
 
@@ -34,11 +33,11 @@ const Home = () => {
                 {loading && <p>Loading...</p>}
                 {error && <p>{error}</p>}
                 {!loading && !error && (
-                    loadedMovies.map((movie) => (
+                    movies.slice(0, limit).map((movie) => (
                         <MovieComponent key={movie.id} movie={movie} />
                     ))
                 )}
-                {loadedMovies.length < movies.length && (
+                {movies.length > limit && (
                     <button onClick={loadMoreMovies}>Load More</button>
                 )}
             </div>
@@ -46,12 +45,10 @@ const Home = () => {
                 <h3>Sort By:</h3>
                 <button onClick={() => sortMovies('popularity')}>Popularity</button>
                 <button onClick={() => sortMovies('release_date')}>Release Date</button>
-               
             </div>
             <div>
                 <h3>Search:</h3>
                 <input type="text" placeholder="Search movies..." onKeyPress={handleSearchByEnter} />
-               
             </div>
         </div>
     );
